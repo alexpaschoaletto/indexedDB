@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/global-styles.css">
+    <title>indexedDB</title>
+</head>
+<body>
+    <h1 class="title">indexedDB</h1>
+    <form action="validate/index.html" method="GET">
+        <div>
+            <label for="username">username:</label>
+            <input type="text" id="username" name="username" placeholder="enter username" required />
+        </div>
+        <div>
+            <label for="password">password:</label>
+            <input type="password" id="password" name="password" placeholder="enter password" minlength="6" maxlength="12" required />
+        </div>
+        <div class="buttons">
+            <button name="action" id="login" value="login" type="submit">Login</button>
+            <button name="action" id="create" value="create" type="submit">Create</button>
+        </div>
+    </form>
+    <script src="/scripts/localStorage.js"></script>
+    <script src="/scripts/helper.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

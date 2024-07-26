@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/global-styles.css">
+    <link rel="stylesheet" href="logged-styles.css">
+    <title>indexedDB</title>
+</head>
+<body>
+    <div class="header">
+        <h3 id="headerText">Welcome</h3>
+        <button class="logout" onclick="logout()">Logout</button>
+    </div>
+    <h1>Your list</h1>
+    <input class="item-input" id="itemInput" maxlength="50" placeholder="insert item...">
+    <ul class="items" id="itemList"></ul>
+    <script src="/scripts/localStorage.js"></script>
+    <script src="/scripts/helper.js"></script>
+    <script src="logged-script.js"></script>
+</body>
+</html>
