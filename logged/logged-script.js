@@ -1,31 +1,58 @@
-const user = getFromStorage("logged");
 const header = element("headerText");
 const input = element("itemInput");
 const list = element("itemList");
+let user = null;
 
-const getUserList = () => {
-    if(!user){
-        goBack();
-        return null;
+
+// CALLBACKS DO BANCO DE DADOS ///////////////////////////////////////////////////////////////////////////////////
+
+const onQuerySuccess = (operation, content) => {
+    switch(operation){
+        case "get-logged":
+            console.log("user which is logged in:", content);
+            if(content) return setUser(content);
+            else goBack();
+            break;
+        case "logout":
+            console.log("just logged out:", content);
+            goBack();
+            break;
+        case "save":
+            console.log("saved successfully:", content);
+            break;
+        default: console.log(operation, content);
     }
-    const list = getFromStorage("users").find(u => u.username === user.name).list;
-    return list?? [];
 }
 
-const items = getUserList();
+
+const onQueryError = (operation, content) => {
+    console.warn(`${operation} went wrong: `, content);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 const updateUser = () => {
-    const users = getFromStorage("users");
-    console.log(users);
-    const index = users.findIndex(u => u.username === user.name);
-    if(index === -1) return;
-    users[index].list = [...items];
-    saveOnStorage("users", users);
+    saveUserOnDatabase(user, onQuerySuccess, onQueryError);
 }
 
+
+const logoutUser = () => {
+    userLogoutFromDatabase(onQuerySuccess, onQueryError);
+}
+
+
+const setUser = (newUser) => {
+    header.innerText = `Welcome, ${newUser.username}`;
+    user = {...newUser};
+    renderItems();
+}
+
+
 const renderItems = () => {
+    if(!user) return;
     let rendered ="";
-    items.forEach((item, index) => {
+    user.list.forEach((item, index) => {
         rendered += `<li class="item">
             <button id=${index} class="x" onclick="removeItem(id)">
                 X
@@ -40,8 +67,8 @@ const renderItems = () => {
 
 
 const removeItem = (id) => {
-    if(!items[id]) return;
-    items.splice(id, 1);
+    if(!user.list[id]) return;
+    user.list.splice(id, 1);
     renderItems();
     updateUser();
 }
@@ -49,17 +76,11 @@ const removeItem = (id) => {
 
 const addItem = () => {
     if(!input.value || !input.value.length) return;
-    items.push(input.value.trim().replace(/[\<\>]+/g, ""));
+    user.list.push(input.value.trim().replace(/[\<\>]+/g, ""));
     input.value = "";
     input.focus();
     renderItems();
     updateUser();
-}
-
-
-const logout = () => {
-    removeFromStorage("logged");
-    goBack();
 }
 
 
@@ -69,6 +90,5 @@ const onKeyPressed = (e) => {
     }
 }
 
-renderItems();
-header.innerText = `Welcome, ${user.name}`;
+getLoggedInUserFromDatabase(onQuerySuccess, onQueryError);
 document.addEventListener("keypress", onKeyPressed);
